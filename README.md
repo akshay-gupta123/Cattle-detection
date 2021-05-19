@@ -64,8 +64,8 @@ For each training image, 2 augmented images are generated using **Albumentations
 ### Inferences :
 
 <p float="left">
-  <img src="assets/77.jpg" width="350" />
-  <img src="assets/127.jpg" width="350" /> 
+  <img src="assets/1.jpg" width="350" />
+  <img src="assets/2.jpg" width="350" /> 
 </p>
 
 <p float="left">
