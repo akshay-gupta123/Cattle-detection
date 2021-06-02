@@ -1,15 +1,14 @@
 import argparse
 import cv2
 import numpy as np
-from plot import colors, plot_one_box
 from pathlib import Path
 import torch
 import time
-from utils import set_logging, LoadImages, increment_path
-
+from util_function.plot import colors, plot_one_box
+from util_function.misc import set_logging, LoadImages, increment_path
 
 def detect(opt):
-    source, weights, view_img, save_txt, imgsz = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size
+    source, weights, view_img, save_txt = opt.source, opt.weights, opt.view_img, opt.save_txt
     save_img = not opt.nosave and not source.endswith('.txt')  # save inference images
     
     # Directories
@@ -20,7 +19,11 @@ def detect(opt):
     set_logging()
     
     # Load model
-    model = torch.hub.load('ultralytics/yolov5','custom', path_or_model=weights).autoshape()
+    try:
+        model = torch.hub.load('ultralytics/yolov5','custom', path_or_model=weights).autoshape()
+    except :
+        model = torch.hub.load('ultralytics/yolov5','custom', path=weights).autoshape()
+        
     model.conf = opt.conf_thres
     model.iou = opt.iou_thres  
     names = model.module.names if hasattr(model, 'module') else model.names  # get class names
@@ -107,8 +110,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', nargs='+', type=str, default='weights/300.pt', help='model.pt path(s)')
     parser.add_argument('--source', type=str, default='data', help='source') 
-    parser.add_argument('--conf-thres', type=float, default=0.2, help='object confidence threshold')
-    parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
+    parser.add_argument('--conf-thres', type=float, default=0.15, help='object confidence threshold')
+    parser.add_argument('--iou-thres', type=float, default=0.35, help='IOU threshold for NMS')
     parser.add_argument('--view-img', action='store_true', help='display results')
     parser.add_argument('--save-txt', action='store_true', help='save results to *.txt')
     parser.add_argument('--save-conf', action='store_true', help='save confidences in --save-txt labels')
